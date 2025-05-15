@@ -363,6 +363,10 @@ function validateStep(step) {
  
  <script>
 $(document).ready(function(){
+
+  isEmailValid = false;
+  isUsernameValid = false;
+
     function toggleNextButton(isEnabled) {
         $('#nextButton').prop('disabled', !isEnabled);
     }
@@ -382,15 +386,16 @@ $(document).ready(function(){
                         $('#emailFeedback').text('Email is already taken.').show();
                         $('#email')[0].setCustomValidity('Email is already taken.');
                         $('#email').siblings('.invalid-feedback').not('#emailFeedback').hide();
-                        toggleNextButton(false); // ❌ Disable next button
+                        isEmailValid = false; // ❌ Disable next button
                     } else {
                         // Email is valid and available
                         $('#email').removeClass('is-invalid').addClass('is-valid');
                         $('#emailFeedback').text('').hide();
                         $('#email')[0].setCustomValidity('');
                         $('#email').siblings('.valid-feedback').show();
-                        toggleNextButton(true); // ✅ Enable next button
+                        isEmailValid = true; // ✅ Enable next button
                     }
+                  toggleNextButton(isEmailValid && isUsernameValid)   
                 },
                 error: function(xhr, status, error) {
                     alert('An error occurred: ' + error);
@@ -409,6 +414,63 @@ $(document).ready(function(){
         if ($('#email')[0].validity.valueMissing) {
             $('#email')[0].setCustomValidity('Please enter a valid email.');
             $('#emailFeedback').hide();
+            toggleNextButton(false); // ❌ Disable next button
+        }
+    });
+});
+</script>
+
+<script>
+$(document).ready(function(){
+
+  isEmailValid = false;
+  isUsernameValid = false;
+
+    function toggleNextButton(isEnabled) {
+        $('#nextButton').prop('disabled', !isEnabled);
+    }
+
+    $('#username').on('input', function(){
+        var username = $(this).val();
+        if (username.length > 0) {
+            $.ajax({
+                url: 'AJAX/check_username.php',
+                method: 'POST',
+                data: { username: username },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.exists) {
+                        $('#username').removeClass('is-valid').addClass('is-invalid');
+                        $('#usernameFeedback').text('Username is already taken.').show();
+                        $('#username')[0].setCustomValidity('Username is already taken.');
+                        $('#username').siblings('.invalid-feedback').not('#usernameFeedback').hide();
+                        isUsernameValid = false; // ❌ Disable next button
+                    } else {
+                        $('#username').removeClass('is-invalid').addClass('is-valid');
+                        $('#usernameFeedback').text('').hide();
+                        $('#username')[0].setCustomValidity('');
+                        $('#username').siblings('.valid-feedback').show();
+                        isUsernameValid = true; // ✅ Enable next button
+                    }
+                  toggleNextButton(isEmailValid && isUsernameValid)  
+                },
+                error: function(xhr, status, error) {
+                    alert('An error occurred: ' + error);
+                }
+            });
+        } else {
+            // Empty input reset
+            $('#username').removeClass('is-valid is-invalid');
+            $('#usernameFeedback').text('').hide();
+            $('#username')[0].setCustomValidity('');
+            toggleNextButton(false); // ❌ Disable next button
+        }
+    });
+
+    $('#username').on('invalid', function() {
+        if ($('#username')[0].validity.valueMissing) {
+            $('#username')[0].setCustomValidity('Please enter a valid username.');
+            $('#usernameFeedback').hide();
             toggleNextButton(false); // ❌ Disable next button
         }
     });
