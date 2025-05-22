@@ -1,3 +1,42 @@
+<?php
+
+require_once('classes/database.php');
+$con = new database();
+
+$data = $con->opencon();
+$sweetAlertConfig = "";
+
+if(isset($_POST['add_authors'])) {
+    $firstname = $_POST['author_FN'];
+    $lastname = $_POST['author_LN'];
+    $birthday = $_POST['author_birthday'];
+    $nationality = $_POST['author_nat'];
+
+    $author_id = $con->insertAuthor($firstname, $lastname, $birthday, $nationality);
+    
+    if ($author_id) {
+        $sweetAlertConfig = "
+          <script>
+            Swal.fire({
+              icon: 'success',
+              title: 'Added Successful',
+              text: 'Author has been addded successfully!',
+              confirmButtonText: 'OK'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                window.location.href = 'add_authors.php';
+              }
+            });
+          </script>"; 
+      } else {
+        $_SESSION ['error'] = "Error occurred while inserting address. Please try again.";
+      }
+  } else {
+      $_SESSION ['error'] = "Sorry, there was an error signing up.";
+  }
+
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -5,15 +44,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="./bootstrap-5.3.3-dist/css/bootstrap.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"> <!-- Correct Bootstrap Icons CSS -->
+  <link rel="stylesheet" href="./package/dist/sweetalert2.min.css"> 
   <title>Authors</title>
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">Library Management System (Admin)</a>
-      <a class="btn btn-outline-light ms-auto active" href="add_authors.html">Add Authors</a>
-      <a class="btn btn-outline-light ms-2" href="add_genres.html">Add Genres</a>
+      <a class="btn btn-outline-light ms-auto active" href="add_authors.php">Add Authors</a>
+      <a class="btn btn-outline-light ms-2" href="add_genres.php">Add Genres</a> 
       <a class="btn btn-outline-light ms-2" href="add_books.html">Add Books</a>
+      <a class="btn btn-outline-light ms-2" href="logout.php">Logout</a>
       <div class="dropdown ms-2">
         <button class="btn btn-outline-light dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
           <i class="bi bi-person-circle"></i> <!-- Bootstrap icon -->
@@ -47,22 +88,22 @@
 
 
   <h4 class="mt-5">Add New Author</h4>
-  <form>
+  <form method="post" action="" novalidate>
     <div class="mb-3">
       <label for="authorFirstName" class="form-label">First Name</label>
-      <input type="text" class="form-control" id="authorFirstName" required>
+      <input type="text" name="author_FN" class="form-control" id="authorFirstName" required>
     </div>
     <div class="mb-3">
       <label for="authorLastName" class="form-label">Last Name</label>
-      <input type="text" class="form-control" id="authorLastName" required>
+      <input type="text" name="author_LN" class="form-control" id="authorLastName" required>
     </div>
     <div class="mb-3">
       <label for="authorBirthYear" class="form-label">Birth Date</label>
-      <input type="date" class="form-control" id="authorBirthYear" max="<?= date('Y-m-d') ?>" required>
+      <input type="date" name="author_birthday" class="form-control" id="authorBirthYear" max="<?= date('Y-m-d') ?>" required>
     </div>
     <div class="mb-3">
       <label for="authorNationality" class="form-label">Nationality</label>
-      <select class="form-select" id="authorNationality" required>
+      <select class="form-select" name="author_nat" id="authorNationality" required>
         <option value="" disabled selected>Select Nationality</option>
         <option value="American">Filipino</option>
         <option value="American">American</option>
@@ -80,11 +121,13 @@
         <option value="Other">Other</option>
       </select>
     </div>
-    <button type="submit" class="btn btn-primary">Add Author</button>
+    <button type="submit" name="add_authors" class="btn btn-primary">Add Author</button>
   </form>
 </div>
 <script src="./bootstrap-5.3.3-dist/js/bootstrap.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script> <!-- Add Popper.js -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script> <!-- Correct Bootstrap JS -->
+<script src="./package/dist/sweetalert2.min.js"></script>
+<?php echo $sweetAlertConfig; ?>
 </body>
 </html>

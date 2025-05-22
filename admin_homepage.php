@@ -11,9 +11,10 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
           <a class="navbar-brand" href="#">Library Management System (Admin)</a>
-          <a class="btn btn-outline-light ms-auto" href="add_authors.html">Add Authors</a>
-          <a class="btn btn-outline-light ms-2" href="add_genres.html">Add Genres</a>
-          <a class="btn btn-outline-light ms-2" href="add_books.html">Add Books</a>
+          <a class="btn btn-outline-light ms-auto" href="add_authors.php">Add Authors</a>
+          <a class="btn btn-outline-light ms-2" href="add_genres.php">Add Genres</a>
+          <a class="btn btn-outline-light ms-2" href="add_books.php">Add Books</a>
+          <a href="logout.php" class="btn btn-outline-light ms-2">Logout</a>
           <div class="dropdown ms-2">
             <button class="btn btn-outline-light dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="bi bi-person-circle"></i> <!-- Bootstrap icon -->
@@ -36,6 +37,7 @@
               </li>
               <li>
                 <button class="dropdown-item text-danger" onclick="logout()">
+
                   <i class="bi bi-box-arrow-right me-2"></i> Logout
                 </button>
               </li>
