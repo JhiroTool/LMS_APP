@@ -106,4 +106,64 @@ function insertAuthor($firstname, $lastname, $birthday, $nationality) {
             return false;
         }
     }
+
+    function viewAuthors() {
+        $con = $this->opencon();
+        return $con->query(query: "SELECT *  FROM authors")
+        ->fetchAll();
+    }
+
+    function viewAuthorsID($id) {
+    $con = $this->opencon();
+    $stmt = $con->prepare("SELECT * FROM authors WHERE author_id = ?");
+    $stmt->execute([$id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    function updateAuthor($author_id, $firstname, $lastname, $birthday ,$nationality) {
+    try {
+        $con = $this->opencon();
+        $con->beginTransaction();
+        $query = $con->prepare("UPDATE authors SET author_FN=?, author_LN=?, author_birthday=?, author_nat=? WHERE author_id=?");
+        $query->execute([ $firstname, $lastname, $birthday, $nationality, $author_id]);
+        // Update successful
+        $con->commit();
+        return true;
+    } catch (PDOException $e) {
+        // Handle the exception (e.g., log error, return false, etc.)
+         $con->rollBack();
+        return false; // Update failed
+    }
+}
+
+    function viewGenres() {
+        $con = $this->opencon();
+        return $con->query(query: "SELECT *  FROM genres")
+        ->fetchAll();
+    }
+
+    function viewGenresID($id): array
+{
+    $con = $this->opencon();
+    $stmt = $con->prepare("SELECT * FROM genres WHERE genre_id = ?");
+    $stmt->execute([$id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+    function updateGenre($genreid, $genrename) {
+    try {
+        $con = $this->opencon();
+        $con->beginTransaction();
+        $query = $con->prepare("UPDATE genres SET genre_name=? WHERE genre_id=?");
+        $query->execute([ $genrename, $genreid]);
+        // Update successful
+        $con->commit();
+        return true;
+    } catch (PDOException $e) {
+        // Handle the exception (e.g., log error, return false, etc.)
+         $con->rollBack();
+        return false; // Update failed
+    }
+}
+ 
 }
