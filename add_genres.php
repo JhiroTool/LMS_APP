@@ -48,7 +48,7 @@ if(isset($_POST['add_genre'])) {
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Library Management System (Admin)</a>
+      <a class="navbar-brand" href="admin_homepage.php">Library Management System (Admin)</a>
       <a class="btn btn-outline-light ms-auto" href="add_authors.php">Add Authors</a>
       <a class="btn btn-outline-light ms-2 active" href="add_genres.php">Add Genres</a>
       <a class="btn btn-outline-light ms-2" href="add_books.html">Add Books</a>
